@@ -228,7 +228,8 @@ def write_artifacts(
     def orient(shape, part):
         shape = print_oriented(shape, part)
         if params is not None and params.tray.profile.kind == "coffin":
-            shape = shape.rotate((0, 0, 0), (0, 0, 1), 47.5)
+            angle = 90 if params.tray.profile.plate_shape == "rectangle" else 47.5
+            shape = shape.rotate((0, 0, 0), (0, 0, 1), angle)
         return shape
 
     printed = {

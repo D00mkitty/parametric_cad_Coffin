@@ -61,17 +61,22 @@ REF_4X7_STEP = REF_4X7.model_copy(update={"name": "ref-4x7-step", "features": Fe
 def coffin_preset(name: str, depth: float, rim_offset: float) -> Params:
     return Params(
         name=name,
-        tray=TrayParams(profile=CoffinProfile(rim_offset=rim_offset), depth=depth),
+        tray=TrayParams(
+            profile=CoffinProfile(length=266.7, width=122.2375,
+                                  shoulder_from_head=61.11875, rim_offset=rim_offset,
+                                  plate_shape="rectangle"),
+            depth=depth,
+        ),
         leather=LeatherParams(thickness=3.25),
         mold=MoldParams(
-            flange_width=11.25, base_plate_thickness=10,
+            flange_width=16, base_plate_thickness=10,
             cavity_plate_thickness=depth,
             male_root_blend=NoTreatment(),
             male_floor_blend=CircularFillet(radius=2),
             female_entry_blend_bottom=CircularFillet(radius=2),
         ),
         features=Features(clamp_holes=ClampHoles(
-            enabled=True, pattern="four_corners", diameter=6.6, inset=8,
+            enabled=True, pattern="four_corners", diameter=6.6, inset=11,
             top_chamfer=0, in_male=True, in_female=True,
         )),
     )

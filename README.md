@@ -18,7 +18,7 @@ reference/           the original STEP and STL pair this was reverse-engineered 
 
 Choose **Coffin body** or **Coffin lid** from the preset menu. Both use
 3.25 mm leather and four matching 6.6 mm through-holes for M6 bolts.
-The body is 12 inches long and 1¾ inches deep. The lid is ½ inch deep
+The body is 10½ inches long and 1¾ inches deep. The lid is ½ inch deep
 with a 4 mm outward offset, allowing 0.75 mm nominal clearance per side
 over the body leather at the rim.
 
@@ -26,8 +26,8 @@ Set shoulder position and width, head flare, and foot taper in **Shape**.
 The angles are measured from the long axis. Keep the same shape settings
 for both molds and adjust the lid offset after measuring the dried body.
 
-Print each half on its own plate. The presets export diagonally oriented
-parts and the 3MF includes clamp reinforcement. Check the H2C nozzle
+Print each half on its own plate. The presets export rectangular plates with the long side front to back.
+The 3MF includes clamp reinforcement. The flat corners also accept external clamps. Check the H2C nozzle
 profile and brim in the slicer, especially after changing the outline.
 Use four M6 bolts with washers on the outside faces and draw the die down
 gradually in an alternating pattern. Keep the leather clear of the bolt
