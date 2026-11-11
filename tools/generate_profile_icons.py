@@ -24,7 +24,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "packages" / "tray-core"))
 
 from traymold.params import (  # noqa: E402
-    CircularObroundProfile, CircularRectProfile, ConicObroundProfile, ConicRectProfile,
+    CoffinProfile, CircularObroundProfile, CircularRectProfile, ConicObroundProfile, ConicRectProfile,
     EllipseProfile, G2QuinticObroundProfile, G2QuinticRectProfile, SuperellipseProfile,
 )
 from traymold.profiles import make_base_profile, sample_wire  # noqa: E402
@@ -41,6 +41,7 @@ BOX_W, BOX_H = 24.0, 16.0
 PAD = 1.0
 
 PROFILES = [
+    CoffinProfile(),
     G2QuinticObroundProfile(length=LENGTH, width=WIDTH),
     G2QuinticRectProfile(length=LENGTH, width=WIDTH),
     ConicObroundProfile(length=LENGTH, width=WIDTH),

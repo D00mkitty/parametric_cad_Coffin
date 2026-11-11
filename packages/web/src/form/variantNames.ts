@@ -49,6 +49,12 @@ export const VARIANT_NAMES: Record<string, VariantName> = {
     full: 'Rounded corners, seamless',
     detail: 'No seam where the corner meets the side',
   },
+  coffin: {
+    group: 'Rounded corners',
+    name: 'Coffin',
+    full: 'Coffin',
+    detail: 'Six sides with adjustable head flare and foot taper',
+  },
   circular_rect: {
     group: 'Rounded corners',
     name: 'Constant radius',

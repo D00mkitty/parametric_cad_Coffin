@@ -225,8 +225,14 @@ def write_artifacts(
     trace = _trace(result)
     out: list[Artifact] = []
     # Once, not once per format: turning a solid over copies its whole TShape.
+    def orient(shape, part):
+        shape = print_oriented(shape, part)
+        if params is not None and params.tray.profile.kind == "coffin":
+            shape = shape.rotate((0, 0, 0), (0, 0, 1), 47.5)
+        return shape
+
     printed = {
-        part: print_oriented(shape, part)
+        part: orient(shape, part)
         for part in ("male", "female")
         if (shape := getattr(result, part)) is not None
     }
@@ -246,7 +252,7 @@ def write_artifacts(
             # The plan moves with the parts. `oriented` is the only supported
             # way to do that; see the frame note in `threemf`. The plate layout
             # is a second move, and `threemf.lay_out` does it the same way.
-            plan = resolve_plan(params).oriented(print_oriented)
+            plan = resolve_plan(params).oriented(orient)
             part = next(iter(printed)) if len(printed) == 1 else "assembly"
             name = f"{part}.3mf" if part != "assembly" else "tray-mold.3mf"
             path = outdir / name
