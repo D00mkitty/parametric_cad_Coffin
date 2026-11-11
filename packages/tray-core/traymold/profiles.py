@@ -275,6 +275,12 @@ def make_base_profile(spec) -> cq.Wire:
         return blended_rect_wire(spec.length, spec.width, spec.corner_setback, "conic", spec)
     if kind in ("circular_rect", "circular_obround"):
         return blended_rect_wire(spec.length, spec.width, spec.corner_setback, "circular", spec)
+    if kind == "coffin":
+        polygon = cq.Wire.makePolygon([cq.Vector(x, y) for x, y in spec.vertices()], close=True)
+        rounded = cq.Face.makeFromWires(polygon).fillet2D(
+            spec.corner_radius, polygon.Vertices()
+        ).outerWire()
+        return offset_profile(rounded, spec.rim_offset) if spec.rim_offset else rounded
     if kind == "ellipse":
         return ellipse_wire(spec.length, spec.width)
     if kind == "superellipse":

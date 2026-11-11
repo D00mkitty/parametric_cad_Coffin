@@ -5,6 +5,7 @@ from __future__ import annotations
 from .params import (
     CircularFillet,
     ClampHoles,
+    CoffinProfile,
     Features,
     FitParams,
     G2QuinticBlend,
@@ -57,4 +58,27 @@ REF_4X7 = Params(
 #: The same shape without the STL-revision features - matches the STEP files.
 REF_4X7_STEP = REF_4X7.model_copy(update={"name": "ref-4x7-step", "features": Features()})
 
-PRESETS = {"ref-4x7": REF_4X7, "ref-4x7-step": REF_4X7_STEP}
+def coffin_preset(name: str, depth: float, rim_offset: float) -> Params:
+    return Params(
+        name=name,
+        tray=TrayParams(profile=CoffinProfile(rim_offset=rim_offset), depth=depth),
+        leather=LeatherParams(thickness=3.25),
+        mold=MoldParams(
+            flange_width=11.25, base_plate_thickness=10,
+            cavity_plate_thickness=depth,
+            male_root_blend=NoTreatment(),
+            male_floor_blend=CircularFillet(radius=2),
+            female_entry_blend_bottom=CircularFillet(radius=2),
+        ),
+        features=Features(clamp_holes=ClampHoles(
+            enabled=True, pattern="four_corners", diameter=6.6, inset=8,
+            top_chamfer=0, in_male=True, in_female=True,
+        )),
+    )
+
+
+COFFIN_BODY = coffin_preset("coffin-body", 44.45, 0)
+COFFIN_LID = coffin_preset("coffin-lid", 12.7, 4)
+
+PRESETS = {"ref-4x7": REF_4X7, "ref-4x7-step": REF_4X7_STEP,
+           "coffin-body": COFFIN_BODY, "coffin-lid": COFFIN_LID}

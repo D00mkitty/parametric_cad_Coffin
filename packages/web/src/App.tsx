@@ -149,7 +149,7 @@ export function App({ options }: { options?: DesignOptions } = {}) {
   }, [])
 
   const presetOptions = useMemo(
-    () => presets.filter((p) => p.name === DEFAULT_PRESET || p.name.startsWith('ref-')),
+    () => presets.filter((p) => p.name === DEFAULT_PRESET || p.name.startsWith('ref-') || p.name.startsWith('coffin-')),
     [presets],
   )
 

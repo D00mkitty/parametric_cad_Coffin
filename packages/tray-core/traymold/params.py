@@ -13,6 +13,7 @@ alone.  No edge treatment may influence it.
 
 from __future__ import annotations
 
+from math import radians, tan
 from typing import Annotated, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -151,6 +152,46 @@ class SuperellipseProfile(_RectProfileBase):
         return "circular"
 
 
+class CoffinProfile(_RectProfileBase):
+    kind: Literal["coffin"] = "coffin"
+    length: float = Field(default=304.8, gt=0, le=1000)
+    width: float = Field(default=139.7, gt=0, le=1000, description="Shoulder width, mm")
+    shoulder_from_head: float = Field(default=69.85, gt=0)
+    head_flare: float = Field(default=16.460014812, gt=0, lt=90, description="Degrees from long axis")
+    foot_taper: float = Field(default=8.455027677, gt=0, lt=90, description="Degrees from long axis")
+    corner_radius: float = Field(default=5, gt=0)
+    rim_offset: float = Field(default=0, ge=0, description="Outward offset for a slip-over lid, mm")
+
+    @property
+    def head_width(self) -> float:
+        return self.width - 2 * self.shoulder_from_head * tan(radians(self.head_flare))
+
+    @property
+    def foot_width(self) -> float:
+        return self.width - 2 * (self.length - self.shoulder_from_head) * tan(radians(self.foot_taper))
+
+    @model_validator(mode="after")
+    def check_outline(self):
+        if self.shoulder_from_head >= self.length or min(self.head_width, self.foot_width) <= 0:
+            raise ValueError("Shoulders must be between the ends and both end widths must be positive")
+        return self
+
+    @property
+    def corner_setback(self) -> float:
+        return self.corner_radius
+
+    @property
+    def corner_style(self) -> str:
+        return "circular"
+
+    def vertices(self) -> list[tuple[float, float]]:
+        head, foot = -self.length / 2, self.length / 2
+        shoulder = head + self.shoulder_from_head
+        h, w, f = self.head_width / 2, self.width / 2, self.foot_width / 2
+        return [(head, h), (head, -h), (shoulder, -w),
+                (foot, -f), (foot, f), (shoulder, w)]
+
+
 ProfileSpec = Annotated[
     Union[
         G2QuinticObroundProfile,
@@ -161,6 +202,7 @@ ProfileSpec = Annotated[
         CircularRectProfile,
         EllipseProfile,
         SuperellipseProfile,
+        CoffinProfile,
     ],
     Field(discriminator="kind"),
 ]

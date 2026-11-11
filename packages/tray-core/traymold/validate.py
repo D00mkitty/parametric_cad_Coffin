@@ -252,6 +252,12 @@ def _placement_diagnostics(params, poly, gap) -> list[Diagnostic]:
             diagonal = getattr(feature, "diagonal", "nw_se")
             probes = _corner_points(params, feature.inset, diagonal, feature.pattern)
             edge = feature.inset - radius
+            if params.tray.profile.kind == "coffin" and name == "clamp_holes":
+                from .coffin import clamp_centres
+
+                probes = clamp_centres(params)
+                radius += feature.top_chamfer
+                edge = feature.inset + 1 - radius
 
         worst = min(_clearance(poly, px, py, gap) for px, py in probes) - radius
         if worst < min_wall:

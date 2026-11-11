@@ -245,8 +245,11 @@ def resolve(params) -> PrintPlan:
         ))
         # Only worth naming when there is a plug left under the band to empty.
         if depth - band > 1.0:
+            inset = PLUG_CORE_INSET
+            if params.tray.profile.kind == "coffin":
+                inset = min(inset, 0.7 * params.tray.profile.corner_radius)
             add("male", Region(
-                "lighten: plug core", "male", prism(-PLUG_CORE_INSET, 0.0, depth - band),
+                "lighten: plug core", "male", prism(-inset, 0.0, depth - band),
                 _only(fill_density=_plug_core_density(base)),
                 "a closed box in compression; its middle carries nothing",
             ))
@@ -257,7 +260,11 @@ def resolve(params) -> PrintPlan:
         radius = CLAMP_BEARING_FACTOR * ch.diameter / 2.0
         dense = _only(fill_density=max(0.70, base.fill_density or 0.0),
                       perimeters=max(4, base.perimeters or 0))
-        for index, (x, y) in enumerate(_corner_points(params, ch.inset, ch.diagonal, ch.pattern)):
+        from .coffin import clamp_centres
+
+        points = (clamp_centres(params) if params.tray.profile.kind == "coffin"
+                  else _corner_points(params, ch.inset, ch.diagonal, ch.pattern))
+        for index, (x, y) in enumerate(points):
             # Both halves, whatever `in_male` says: the bolt passes through the
             # female and bears down onto the male's plate either way, so the
             # male's plate takes the same load with or without a bore in it.

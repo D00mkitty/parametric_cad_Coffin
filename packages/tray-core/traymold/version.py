@@ -26,7 +26,7 @@ SCHEMA_VERSION = "2.4.0"
 #        so the exported STL and 3MF change for unchanged parameters - by up to
 #        a factor of six on a profile that was meshing its sliver faces to
 #        death. The B-rep is untouched; only the tessellation of it moves.
-MODEL_VERSION = "0.5.0"
+MODEL_VERSION = "0.6.0"
 
 
 def kernel_versions() -> dict[str, str]:

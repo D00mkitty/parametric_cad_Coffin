@@ -269,6 +269,19 @@ def _prism(family: ProfileFamily, params, z0: float, z1: float, extra) -> cq.Sol
 
 
 def _plate(params, z0: float, z1: float) -> cq.Solid:
+    if params.tray.profile.kind == "coffin":
+        from .coffin import clamp_centres
+
+        wire = offset_profile(make_base_profile(params), params.mold.flange_width)
+        plate = cq.Solid.extrudeLinear(wire, [], cq.Vector(0, 0, z1-z0)).translate((0, 0, z0))
+        holes = params.features.clamp_holes
+        if holes.enabled:
+            for x, y in clamp_centres(params):
+                tab = cq.Solid.makeCylinder(
+                    holes.inset + 1, z1-z0, cq.Vector(x, y, z0)
+                )
+                plate = plate.fuse(tab)
+        return cq.Solid(_checked(plate, what="coffin plate").wrapped)
     d = derive(params)
     return (
         cq.Workplane("XY")
@@ -493,7 +506,10 @@ def apply_features(male, female, params):
 
     if f.clamp_holes.enabled:
         ch = f.clamp_holes
-        pts = _corner_points(params, ch.inset, ch.diagonal, ch.pattern)
+        from .coffin import clamp_centres
+
+        pts = (clamp_centres(params) if params.tray.profile.kind == "coffin"
+               else _corner_points(params, ch.inset, ch.diagonal, ch.pattern))
         for x, y in pts:
             if ch.in_female and female is not None:
                 cut = cq.Workplane("XY").workplane(offset=-1.0).center(x, y).circle(ch.diameter / 2).extrude(t + 2.0)

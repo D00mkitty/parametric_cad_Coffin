@@ -55,6 +55,9 @@ from .worker import get_pool, shutdown_pool
 log = logging.getLogger("trayapi")
 
 PRESET_TITLES = {
+    "coffin-body": ("Coffin body", "12-inch body with four M6 clamp bolts, sized for the H2C."),
+    "coffin-lid": ("Coffin lid", "Shallow slip-over lid for the coffin body preset."),
+
     "ref-4x7": ("Reference 4x7 (STL revision)",
                 "The reference pair with the clamp holes and pry notches present in the STL files."),
     "ref-4x7-step": ("Reference 4x7 (STEP revision)",
