@@ -32,7 +32,10 @@ def corner_radius_min(params) -> float:
 
 def plate_size(params) -> tuple[float, float]:
     p = params.tray.profile
-    return (p.length + 2 * params.mold.flange_width, p.width + 2 * params.mold.flange_width)
+    margin = params.mold.flange_width
+    if p.kind == "coffin" and p.plate_shape == "rectangle":
+        margin += p.rim_offset
+    return p.length + 2 * margin, p.width + 2 * margin
 
 
 @dataclass(frozen=True)

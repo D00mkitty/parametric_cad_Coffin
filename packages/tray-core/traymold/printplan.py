@@ -260,9 +260,9 @@ def resolve(params) -> PrintPlan:
         radius = CLAMP_BEARING_FACTOR * ch.diameter / 2.0
         dense = _only(fill_density=max(0.70, base.fill_density or 0.0),
                       perimeters=max(4, base.perimeters or 0))
-        from .coffin import clamp_centres
+        from .coffin import clamp_centres, uses_tabs
 
-        points = (clamp_centres(params) if params.tray.profile.kind == "coffin"
+        points = (clamp_centres(params) if uses_tabs(params)
                   else _corner_points(params, ch.inset, ch.diagonal, ch.pattern))
         for index, (x, y) in enumerate(points):
             # Both halves, whatever `in_male` says: the bolt passes through the

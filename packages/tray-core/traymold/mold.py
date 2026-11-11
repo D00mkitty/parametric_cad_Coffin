@@ -269,8 +269,9 @@ def _prism(family: ProfileFamily, params, z0: float, z1: float, extra) -> cq.Sol
 
 
 def _plate(params, z0: float, z1: float) -> cq.Solid:
-    if params.tray.profile.kind == "coffin":
-        from .coffin import clamp_centres
+    from .coffin import clamp_centres, uses_tabs
+
+    if uses_tabs(params):
 
         wire = offset_profile(make_base_profile(params), params.mold.flange_width)
         plate = cq.Solid.extrudeLinear(wire, [], cq.Vector(0, 0, z1-z0)).translate((0, 0, z0))
@@ -506,9 +507,9 @@ def apply_features(male, female, params):
 
     if f.clamp_holes.enabled:
         ch = f.clamp_holes
-        from .coffin import clamp_centres
+        from .coffin import clamp_centres, uses_tabs
 
-        pts = (clamp_centres(params) if params.tray.profile.kind == "coffin"
+        pts = (clamp_centres(params) if uses_tabs(params)
                else _corner_points(params, ch.inset, ch.diagonal, ch.pattern))
         for x, y in pts:
             if ch.in_female and female is not None:

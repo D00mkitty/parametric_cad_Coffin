@@ -4,6 +4,11 @@ from math import hypot
 from .derive import forming_gap
 
 
+def uses_tabs(params):
+    profile = params.tray.profile
+    return profile.kind == "coffin" and profile.plate_shape == "tabs"
+
+
 def clamp_centres(params):
     spec = params.tray.profile
     vertices = spec.vertices()

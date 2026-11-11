@@ -161,6 +161,7 @@ class CoffinProfile(_RectProfileBase):
     foot_taper: float = Field(default=8.455027677, gt=0, lt=90, description="Degrees from long axis")
     corner_radius: float = Field(default=5, gt=0)
     rim_offset: float = Field(default=0, ge=0, description="Outward offset for a slip-over lid, mm")
+    plate_shape: Literal["tabs", "rectangle"] = "tabs"
 
     @property
     def head_width(self) -> float:
